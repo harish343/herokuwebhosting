@@ -15,6 +15,18 @@ app.set("view engine","hbs");
 app.set("views",template_path);
 hbs.registerPartials(partials_path)
 
+
+// salt password
+const bcrypt = require("bcryptjs")
+const securePassword = async(password) =>{
+    const passwordHash = await bcrypt.hash(password,10)
+    console.log(passwordHash)
+    const passwordmatch = await bcrypt.compare(password,passwordHash)
+}
+
+
+
+
 // console.log(path.join(__dirname,"/public/index"))
 // console.log(path.join(__dirname,"../template/partials"))
 app.get("/",(req,res)=>{
@@ -68,6 +80,9 @@ app.post("/register",async(req,res)=>{
         res.status(400).send(error);
     }
 })
+
+
+
 app.listen(port,()=>{
     console.log(`server is running at port no ${port}`)
 })
