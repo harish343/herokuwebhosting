@@ -18,7 +18,7 @@ hbs.registerPartials(partials_path)
 // console.log(path.join(__dirname,"/public/index"))
 // console.log(path.join(__dirname,"../template/partials"))
 app.get("/",(req,res)=>{
-    res.render("index")
+    res.render("register")
 })
 app.get("/register",(req,res)=>{
     res.render("register")
