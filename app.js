@@ -39,55 +39,63 @@ app.get("/register",(req,res)=>{
 app.get("/login",(req,res)=>{
     res.render("login")
 })
-app.post("/login",async(req,res)=>{
-    try{
-        console.log("this is trying")
-        const email = req.body.email;
-        const password = req.body.password
-        const useremail = await Register.findOne({email:email})
-        const isMatch = await bcrypt.compare(password,useremail.password)
+// app.post("/login",async(req,res)=>{
+//     try{
+//         console.log("this is trying")
+//         const email = req.body.email;
+//         const password = req.body.password
+//         const useremail = await Register.findOne({email:email})
+//         const isMatch = await bcrypt.compare(password,useremail.password)
 
-        if(isMatch){
-            res.status(201).render("index");
-            console.log("password match")
-        }
-        else{
-            res.send("password are not matching")
-        }
-    }catch(error){
-        res.status(400).send("invalid login details")
-    }
-})
-app.post("/register",async(req,res)=>{
-    try{
-        console.log(req.body.firstname)
-        const password = req.body.password;
-        const cpassword = req.body.confirmpassword;
-        if(password === cpassword){
-            const registerEmployee = new Register({
-                firstname:req.body.firstname,
-                lastname:req.body.lastname,
-                email:req.body.email,
-                phone:req.body.phone,
-                age:req.body.age,
+//         if(isMatch){
+//             res.status(201).render("index");
+//             console.log("password match")
+//         }
+//         else{
+//             res.send("password are not matching")
+//         }
+//     }catch(error){
+//         res.status(400).send("invalid login details")
+//     }
+// })
+// app.post("/register",async(req,res)=>{
+//     try{
+//         console.log(req.body.firstname)
+//         const password = req.body.password;
+//         const cpassword = req.body.confirmpassword;
+//         if(password === cpassword){
+//             const registerEmployee = new Register({
+//                 firstname:req.body.firstname,
+//                 lastname:req.body.lastname,
+//                 email:req.body.email,
+//                 phone:req.body.phone,
+//                 age:req.body.age,
                
-                password:req.body.password,
-                confirmpassword:req.body.confirmpassword,
+//                 password:req.body.password,
+//                 confirmpassword:req.body.confirmpassword,
               
-            })
-            const registered = await registerEmployee.save();
-            res.status(201).render("index")
-        }else{
-            res.send("password are not matching")
-        }
-    }
-    catch(error){
-        res.status(400).send(error);
-    }
-})
+//             })
+//             const registered = await registerEmployee.save();
+//             res.status(201).render("index")
+//         }else{
+//             res.send("password are not matching")
+//         }
+//     }
+//     catch(error){
+//         res.status(400).send(error);
+//     }
+// })
 
+const jwt = require("jsonwebtoken")
+const createToken = async() =>{
+    const token = await jwt.sign({_id:"62de946fcf17b2906a22a2c4"},"mynameiskhanhmaehoherooonosdfjoo",{expiresIn:"2 seconds"});
+    console.log(token);
+const userVar = await jwt.verify(token,"mynameiskhanhmaehoherooonosdfjoo");
 
+console.log(userVar);
+}
 
+createToken();
 app.listen(port,()=>{
     console.log(`server is running at port no ${port}`)
 })
