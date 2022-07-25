@@ -3,6 +3,7 @@ const app = express();
 const path = require("path")
 const hbs = require("hbs")
 const Register = require("./models")
+const bcrypt = require("bcrypt")
 require("./conn")
 const port = process.env.PORT || 8000;
 const static_path = path.join(__dirname,"../public/");
@@ -16,13 +17,13 @@ app.set("views",template_path);
 hbs.registerPartials(partials_path)
 
 
-// salt password
-const bcrypt = require("bcryptjs")
-const securePassword = async(password) =>{
-    const passwordHash = await bcrypt.hash(password,10)
-    console.log(passwordHash)
-    const passwordmatch = await bcrypt.compare(password,passwordHash)
-}
+// // salt password
+// const bcrypt = require("bcrypt")
+// const securePassword = async(password) =>{
+//     const passwordHash = await bcrypt.hash(password,10)
+//     console.log(passwordHash)
+//     const passwordmatch = await bcrypt.compare(password,passwordHash)
+// }
 
 
 
@@ -40,11 +41,15 @@ app.get("/login",(req,res)=>{
 })
 app.post("/login",async(req,res)=>{
     try{
+        console.log("this is trying")
         const email = req.body.email;
         const password = req.body.password
         const useremail = await Register.findOne({email:email})
-        if(useremail.password === password){
+        const isMatch = await bcrypt.compare(password,useremail.password)
+
+        if(isMatch){
             res.status(201).render("index");
+            console.log("password match")
         }
         else{
             res.send("password are not matching")
