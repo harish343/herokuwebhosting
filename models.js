@@ -40,8 +40,10 @@ const employeeschema = new mongoose.Schema({
         required:true
     },
     tokens:[{
+      token:{
         type:String,
         required:true
+      }
     }]
 })
 employeeschema.methods.generatedAuthToken = async function(){
@@ -49,7 +51,7 @@ employeeschema.methods.generatedAuthToken = async function(){
         console.log(this._id)
 
         const token = jwt.sign({_id:this._id.toString()},"harishthedeveloperheroworldsaver")
-        this.token = this.tokens.concat({token:token})
+        this.tokens = this.tokens.concat({token:token})
         await this.save();
 
         console.log(token)
@@ -71,11 +73,7 @@ employeeschema.pre("save",async function(next){
         this.confirmpassword =  await bcrypt.hash(this.password,10);
         console.log("step mongoose")
         console.log(`the current password is ${this.password}`)
-        
-        
-    
 
-    
     next()
 })
 

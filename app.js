@@ -76,6 +76,7 @@ app.post("/register",async(req,res)=>{
               
             })
             const token = await registerEmployee.generatedAuthToken();  //saving token after return from function by save method
+            console.log(token)
             const registered = await registerEmployee.save();
             res.status(201).render("index")
         }else{
