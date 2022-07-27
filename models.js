@@ -1,5 +1,8 @@
 const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
+const { registerPartial } = require("hbs")
+
 const employeeschema = new mongoose.Schema({
     firstname:{
         type:String,
@@ -35,8 +38,29 @@ const employeeschema = new mongoose.Schema({
     confirmpassword:{
         type:String,
         required:true
-    }
+    },
+    tokens:[{
+        type:String,
+        required:true
+    }]
 })
+employeeschema.methods.generatedAuthToken = async function(){
+    try{
+        console.log(this._id)
+
+        const token = jwt.sign({_id:this._id.toString()},"harishthedeveloperheroworldsaver")
+        this.token = this.tokens.concat({token:token})
+        await this.save();
+
+        console.log(token)
+        return token;
+    }
+    catch(error){
+            res.send("the error part"+error)
+            console.log("the error part"+error)
+
+    }
+}
 employeeschema.pre("save",async function(next){
     console.log("this is running")
     // if(this.isModified(password)){
@@ -44,10 +68,11 @@ employeeschema.pre("save",async function(next){
         
     
         this.password = await bcrypt.hash(this.password,10);
+        this.confirmpassword =  await bcrypt.hash(this.password,10);
         console.log("step mongoose")
         console.log(`the current password is ${this.password}`)
         
-        this.confirmpassword = undefined
+        
     
 
     
