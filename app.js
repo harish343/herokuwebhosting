@@ -46,7 +46,7 @@ app.post("/login",async(req,res)=>{
         const password = req.body.password
         const useremail = await Register.findOne({email:email})
         const isMatch = await bcrypt.compare(password,useremail.password)
-
+        const token = await useremail.generatedAuthToken(); 
         if(isMatch){
             res.status(201).render("index");
             console.log("password match")
