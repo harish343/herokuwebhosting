@@ -1,3 +1,4 @@
+require('dotenv').config()
 const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
@@ -50,7 +51,8 @@ employeeschema.methods.generatedAuthToken = async function(){
     try{
         console.log(this._id)
 
-        const token = jwt.sign({_id:this._id.toString()},"harishthedeveloperheroworldsaver")
+        const token = jwt.sign({_id:this._id.toString()},process.env.Secret)
+        
         this.tokens = this.tokens.concat({token:token})
         await this.save();
 

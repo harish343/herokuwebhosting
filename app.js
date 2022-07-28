@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require("express");
 const app = express();
 const path = require("path")
@@ -77,6 +78,11 @@ app.post("/register",async(req,res)=>{
             })
             const token = await registerEmployee.generatedAuthToken();  //saving token after return from function by save method
             console.log(token)
+            res.cookie("jwt",token,{
+                expires:new Date(Date.now() +30000),
+                httpOnly:true
+            });
+            
             const registered = await registerEmployee.save();
             res.status(201).render("index")
         }else{
@@ -99,5 +105,6 @@ app.post("/register",async(req,res)=>{
 
 // createToken();
 app.listen(port,()=>{
+    console.log(process.env.Secret)
     console.log(`server is running at port no ${port}`)
 })
