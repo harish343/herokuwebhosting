@@ -89,8 +89,10 @@ app.post("/login",async(req,res)=>{
     try{
         console.log("this is trying")
         const email = req.body.email;
+        console.log(email)
         const password = req.body.password;
         const useremail = await Register.findOne({email:email})
+        console.log(useremail)
         console.log(useremail.password)
         
         const isMatch = await bcrypt.compare(password,useremail.password)
